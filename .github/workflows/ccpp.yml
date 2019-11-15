@@ -1,0 +1,23 @@
+name: C/C++ CI
+on: push
+jobs:
+  build:
+    strategy:
+        matrix:
+          cc: [ gcc ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: cmake
+        run: mkdir build && cd build && ./cmake ..
+      - name: make
+        run: make
+      - name: make test
+        run: make test
+  valgrind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: docker://lpenz/ghaction-cmake:latest
+        with:
+          ctestflags: '-D ExperimentalMemCheck'
