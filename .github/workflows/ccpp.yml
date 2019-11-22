@@ -1,7 +1,7 @@
 name: C/C++ CI
 on: push
 jobs:
-  build:
+  x86_build:
     name: Build on ${{ matrix.os }}
     strategy:
         matrix:
@@ -9,19 +9,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Install srsLTE dependencies
-        run: sudo apt-get -qq update && sudo apt-get install -qq build-essential cmake libfftw3-dev libmbedtls-dev libpcsclite-dev libboost-program-options-dev libconfig++-dev libsctp-dev colordiff ninja-build
-      - name: cmake
-        run: mkdir build && cd build && cmake -GNinja ..
-      - name: build
-        run: cd build && ninja
-      - name: make test
-        run: cd build && make test
-  valgrind:
-    name: Memcheck on ${{ matrix.os }}
-    runs-on: ubuntu-latest
+      - name: Build srsLTE on x86
+        run: |
+          apt update
+          apt install -y build-essential cmake libfftw3-dev libmbedtls-dev libpcsclite-dev libboost-program-options-dev libconfig++-dev libsctp-dev colordiff ninja-build
+          mkdir build && cd build && cmake -GNinja .. && ninja && ctest -T memcheck
+    
+  aarch64_build:
+    runs-on: ubuntu-18.04
+    name: Build and test on aarch64
     steps:
-      - uses: actions/checkout@master
-      - uses: docker://lpenz/ghaction-cmake:latest
-        with:
-          ctestflags: '-D ExperimentalMemCheck'
+    - name: Build srsLTE on aarch64
+      uses: uraimo/run-on-arch-action@master
+      with:
+        architecture: aarch64
+        distribution: ubuntu18.04
+        run: |
+          apt update
+          apt install -y build-essential cmake libfftw3-dev libmbedtls-dev libpcsclite-dev libboost-program-options-dev libconfig++-dev libsctp-dev colordiff ninja-build
+          mkdir build && cd build && cmake -GNinja .. && ninja && ctest -T memcheck
