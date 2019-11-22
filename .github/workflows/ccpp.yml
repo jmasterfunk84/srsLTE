@@ -2,19 +2,23 @@ name: C/C++ CI
 on: push
 jobs:
   build:
+    name: Build on ${{ matrix.os }}
     strategy:
         matrix:
           cc: [ gcc ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Install srsLTE dependencies
+        run: sudo apt-get -qq update && sudo apt-get install -qq build-essential cmake libfftw3-dev libmbedtls-dev libpcsclite-dev libboost-program-options-dev libconfig++-dev libsctp-dev colordiff
       - name: cmake
-        run: mkdir build && cd build && ./cmake ..
+        run: mkdir build && cd build && cmake ..
       - name: make
         run: make
       - name: make test
         run: make test
   valgrind:
+    name: Memcheck on ${{ matrix.os }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
