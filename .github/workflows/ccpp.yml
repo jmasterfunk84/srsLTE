@@ -56,4 +56,4 @@ jobs:
         run: |
           apt update
           apt install -y build-essential cmake libfftw3-dev libmbedtls-dev libpcsclite-dev libboost-program-options-dev libconfig++-dev libsctp-dev colordiff ninja-build valgrind
-          mkdir build && cd build && cmake -GNinja .. && ninja && ctest -T memcheck
+          ls -l && pwd && mkdir build && cd build && cmake -GNinja .. && ninja && ctest -T memcheck
