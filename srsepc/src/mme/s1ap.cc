@@ -269,9 +269,9 @@ bool s1ap::handle_initiating_message(LIBLTE_S1AP_INITIATINGMESSAGE_STRUCT* msg, 
                                                                reply_buffer, &reply_flag);
       break;
     default:
-      m_s1ap_log->error("Unhandled S1AP intiating message: %s\n",
+      m_s1ap_log->error("Unhandled S1AP initiating message: %s\n",
                         liblte_s1ap_initiatingmessage_choice_text[msg->choice_type]);
-      m_s1ap_log->console("Unhandled S1APintiating message: %s\n",
+      m_s1ap_log->console("Unhandled S1AP initiating message: %s\n",
                           liblte_s1ap_initiatingmessage_choice_text[msg->choice_type]);
   }
 
